@@ -252,6 +252,8 @@ RSS 不维护第二套文章清单，而是从最终静态 HTML 中的 canonical
 
 书籍原生内容、客座投稿与《见π》都必须进入同一套静态 SEO / 内容时间链，而不是只在客户端能打开。
 
+公开书架元数据订阅的只读 JSON 派生输出详见 [Book catalog subscription](BOOK_CATALOG_SUBSCRIPTION.md)。它从已有书架 CollectionPage / ItemList 静态输出生成，不复制原始书籍正文；现有 RSS 仍负责 Article 篇章更新。
+
 ## 8. 通用正文媒体与 R2
 
 通用 Markdown 媒体链位于 `scripts/media-pipeline/`，详细合同见 `docs/MEDIA_PIPELINE.md`。
