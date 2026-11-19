@@ -28,8 +28,15 @@ try {
   assert.equal(result.books[0].entryCount, 1);
   assert.equal(result.books[0].cover, "https://tomz.io/books/covers/agent.webp");
   assert.equal(result.books[0].entries[0].url, "https://tomz.io/books/agent/first");
-  render({ ...base, image: "https://evil.example/cover.webp" });
+  render({ ...base, image: "http://evil.example/cover.webp" });
   assert.throws(() => collectBookCatalog(root), /invalid cover/);
+  render({ ...base, image: "https://publisher.example/cover.webp?v=2" });
+  assert.equal(collectBookCatalog(root).books[0].cover, "https://publisher.example/cover.webp?v=2");
+  render({ ...base, mainEntity: { "@type": "ItemList", itemListElement: [
+    { "@type": "ListItem", position: 1, name: "已有博客收录", url: "https://tomz.io/blogs/shared-thinking/old-article" },
+  ] } });
+  assert.equal(collectBookCatalog(root).books[0].entries[0].url,
+    "https://tomz.io/blogs/shared-thinking/old-article");
   render({ ...base, url: "https://wrong.example/books/agent" });
   assert.throws(() => collectBookCatalog(root), /invalid canonical/);
   render({ ...base, mainEntity: { "@type": "ItemList", itemListElement: [

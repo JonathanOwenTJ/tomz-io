@@ -31,3 +31,5 @@ The canonical contents, authorship, dates and SEO remain owned by `src/pages/boo
 An external consumer may periodically `fetch` this static JSON using the site's CORS/HTTP cache policy. In a browser, `ETag` and `Cache-Control` are HTTP/CDN responsibilities. This is **polling of a published JSON feed**, not WebSub/push and not a server-side subscription service. The main `/rss.xml` remains the separate Article update stream (including Book chapters).
 
 Publishing the schema on `main` requires the normal Cloudflare Pages release; a feature branch or local build does **not** change the current `tomz.io` endpoint. Build and check with `pnpm run build && pnpm run verify:static-output`. The production process must execute `external-books:production` before build for external books such as `qishu`.
+
+Book Manifest 可以使用其他合法 HTTPS 封面托管域名；目录保留发布者声明的 URL，不额外限制为 tomz.io 或 assets.tomz.io。已发布博客被逻辑收录为 Book 章节时，条目继续指向原博客 canonical（不复制正文）。

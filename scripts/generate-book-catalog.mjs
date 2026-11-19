@@ -17,7 +17,8 @@ function jsonLd(html) {
 
 function publicUrl(value, prefix) {
   const url = new URL(value, SITE);
-  if (url.origin !== SITE || !url.pathname.startsWith(prefix)) {
+  if (url.origin !== SITE || !url.pathname.startsWith(prefix)
+      || url.username || url.password || url.search || url.hash) {
     throw new Error(`Book catalog contains invalid canonical URL: ${value}`);
   }
   return url.toString();
@@ -26,7 +27,8 @@ function publicUrl(value, prefix) {
 function coverUrl(value) {
   if (!value) return null;
   const url = new URL(value, SITE);
-  if (!["tomz.io", "assets.tomz.io"].includes(url.hostname) || url.protocol !== "https:") {
+  // Book Manifest permits any HTTPS cover publisher; don't narrow that contract.
+  if (url.protocol !== "https:" || url.username || url.password) {
     throw new Error(`Book catalog contains an invalid cover URL: ${value}`);
   }
   return url.toString();
@@ -66,7 +68,12 @@ export function collectBookCatalog(distRoot) {
           || entry.position !== i + 1) {
         throw new Error("Invalid chapter at " + id + "/" + i);
       }
-      const url = publicUrl(String(entry.url), `/books/${id}/`);
+      const url = publicUrl(String(entry.url), "/");
+      // A Book may logically collect an existing Blog; preserve its canonical.
+      if (!new URL(url).pathname.startsWith(`/books/${id}/`)
+          && !new URL(url).pathname.startsWith("/blogs/")) {
+        throw new Error("Book catalog contains invalid chapter canonical: " + url);
+      }
       return { title: entry.name, url, position: entry.position };
     });
     if (new Set(entries.map((entry) => entry.url)).size !== entries.length) {
