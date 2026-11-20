@@ -33,3 +33,5 @@ An external consumer may periodically `fetch` this static JSON using the site's 
 Publishing the schema on `main` requires the normal Cloudflare Pages release; a feature branch or local build does **not** change the current `tomz.io` endpoint. Build and check with `pnpm run build && pnpm run verify:static-output`. The production process must execute `external-books:production` before build for external books such as `qishu`.
 
 Book Manifest 可以使用其他合法 HTTPS 封面托管域名；目录保留发布者声明的 URL，不额外限制为 tomz.io 或 assets.tomz.io。已发布博客被逻辑收录为 Book 章节时，条目继续指向原博客 canonical（不复制正文）。
+
+HTTP consumer policy: the published JSON path has a targeted `_headers` rule with `Cache-Control: public, max-age=300, must-revalidate` and exposed ETag/Last-Modified response headers when available. The production Cloudflare site currently already adds `Access-Control-Allow-Origin: *` globally; this PR intentionally does **not** add a second competing ACAO header. After deployment, verify `200`, `application/json`, ACAO, caching, and validators **from the real production URL** before enabling new consumers.

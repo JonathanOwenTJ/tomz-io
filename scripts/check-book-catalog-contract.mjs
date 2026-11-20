@@ -50,6 +50,9 @@ try {
 }
 
 const dist = join(process.cwd(), "dist");
+const headerRules = readFileSync(join(dist, "_headers"), "utf8");
+assert.match(headerRules, /\/books\/catalog\.json\s*\n  Cache-Control: public, max-age=300, must-revalidate/);
+assert.match(headerRules, /Access-Control-Expose-Headers: ETag, Last-Modified/);
 const generated = JSON.parse(readFileSync(join(dist, "books/catalog.json"), "utf8"));
 assert.deepEqual(generated, collectBookCatalog(dist));
 assert.ok(generated.books.every(book => book.entryCount === book.entries.length));
