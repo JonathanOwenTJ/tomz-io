@@ -12,3 +12,10 @@
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Machine consumers poll a versioned, static Book index.
+# Cross-origin allow-origin is already supplied by the site's Cloudflare rule;
+# avoid duplicating Access-Control-Allow-Origin, which could invalidate CORS.
+/books/catalog.json
+  Cache-Control: public, max-age=300, must-revalidate
+  Access-Control-Expose-Headers: ETag, Last-Modified
